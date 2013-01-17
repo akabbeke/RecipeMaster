@@ -36,7 +36,7 @@ def SendMail(person,user,server,body):
 	fromaddr = 'velocity.recipe.master@gmail.com'
 	tolist = person
 	localtime = time.asctime( time.localtime(time.time()) )
-	sub = 'TEST '+ localtime
+	sub = 'Your recipes for '+ localtime
 	msg = email.MIMEMultipart.MIMEMultipart()
 	msg['From'] = fromaddr
 	msg['To'] = tolist
@@ -54,6 +54,13 @@ def NumpySearcher(nparray,value):
 			return count
 		count += 1
 	return False
+
+def IsNotInList(L,value):
+	try:
+		L.index(value)
+		return False
+	except ValueError:
+		return True
 
 def IngredAdder(ingredList,recipList):
 	for ingred in recipList:
@@ -98,20 +105,29 @@ def ShowSome(name = '',ingred = ''):
 	
 def RecipeSearch():
 	kwargList = ("beef","chicken","fish","vegitarian","egg","curry","pasta","french","burger","steak","pork","rice")
+	#kwargList = ("vegetarian",)
 	ingredList = np.array((('',0),))
 	recipeNames = []
 	recipeURL = []
 	for count in range(7):
-		index = random.randint(0,len(kwargList)-1)
-		recipe = ShowSome(kwargList[index])
-		recipeNames += [recipe['title']]
-		recipeURL += [recipe['href']]
-		ingredList = IngredAdder(ingredList,recipe['ingredients'].split(', '))
+		isRepeat = True
+		count = 0
+		while isRepeat:
+			index = random.randint(0,len(kwargList)-1)
+			recipe = ShowSome(kwargList[index])
+			count += 1
+			if IsNotInList(recipeNames,recipe['title']):
+				recipeNames += [recipe['title']]
+				recipeURL += [recipe['href']]
+				ingredList = IngredAdder(ingredList,recipe['ingredients'].split(', '))
+				isRepeat = False
+			if count > 10:
+				isRepeat = False
 	body = BodyBuilder(recipeNames,recipeURL,ingredList[ingredList[:,0].argsort()])
 	return body
 		
 def main():
-	emailList = ('akabbeke@gmail.com','jakek.nielsen@gmail.com')
+	emailList = ('gkabbeke@telus.net','akabbeke@gmail.com','jakek.nielsen@gmail.com')
 	
 	user = 'velocity.recipe.master@gmail.com'
 	passw = base64.b64encode('thisisthepassword')
@@ -126,7 +142,9 @@ def main():
 	mail = imaplib.IMAP4_SSL(imap_host)
 	mail.login(user,base64.b64decode(passw))
 	for person in emailList:
+		print person
 		body = RecipeSearch()
+		print body
 		SendMail(person,user,server,body)
 		print 'Sent mail to '+person
 	return
