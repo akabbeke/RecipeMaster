@@ -5,19 +5,11 @@ import random
 import numpy as np
 import smtplib
 import imaplib
-import getpass
 import email
-import pickle
 import base64
-import os
-import mimetypes
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import COMMASPACE
-from email.MIMEBase import MIMEBase
-from email.parser import Parser
-from email.MIMEImage import MIMEImage
 from email.MIMEText import MIMEText
-from email.MIMEAudio import MIMEAudio
 
 def BodyBuilder(recipeNames,recipeURL,ingredlist):
 	#Feel the burn. Also builds the email body.
