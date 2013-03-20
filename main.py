@@ -96,7 +96,6 @@ def ShowSome(name = '',ingred = ''):
 	return recipe
 	
 def RecipeSearch(kwargList):
-	kwargList = ("beef","chicken","fish","vegitarian","egg","chili","curry","pasta","french","burger","steak","pork","rice")
 	ingredList = np.array((('',0),))
 	recipeNames = []
 	recipeURL = []
