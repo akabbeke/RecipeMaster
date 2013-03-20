@@ -25,7 +25,7 @@ def BodyBuilder(recipeNames,recipeURL,ingredlist):
 	return body
 	
 def SendMail(person,user,server,body):
-	fromaddr = 'velocity.recipe.master@gmail.com'
+	fromaddr = user
 	tolist = person
 	localtime = time.asctime( time.localtime(time.time()) )
 	sub = 'Your recipes for '+ localtime
@@ -95,9 +95,8 @@ def ShowSome(name = '',ingred = ''):
 	recipe = results[num]
 	return recipe
 	
-def RecipeSearch():
-	kwargList = ("beef","chicken","fish","vegitarian","egg","curry","pasta","french","burger","steak","pork","rice")
-	#kwargList = ("vegetarian",)
+def RecipeSearch(kwargList):
+	kwargList = ("beef","chicken","fish","vegitarian","egg","chili","curry","pasta","french","burger","steak","pork","rice")
 	ingredList = np.array((('',0),))
 	recipeNames = []
 	recipeURL = []
@@ -119,10 +118,11 @@ def RecipeSearch():
 	return body
 		
 def main():
-	emailList = ('gkabbeke@telus.net','akabbeke@gmail.com','jakek.nielsen@gmail.com')
-	
+	kwargList = ("beef","chicken","fish","vegitarian","egg","chili","curry","pasta","french","burger","steak","pork","rice")
+	emailList = ('akabbeke@gmail.com','jakek.nielsen@gmail.com')
 	user = 'velocity.recipe.master@gmail.com'
-	passw = base64.b64encode('thisisthepassword')
+	unencodedPass = raw_input("Enter Password: ")
+	passw = base64.b64encode(unencodedPass)
 	smtp_host = 'smtp.gmail.com'
 	smtp_port = 587
 	server = smtplib.SMTP()
@@ -135,7 +135,7 @@ def main():
 	mail.login(user,base64.b64decode(passw))
 	for person in emailList:
 		print person
-		body = RecipeSearch()
+		body = RecipeSearch(kwargList)
 		print body
 		SendMail(person,user,server,body)
 		print 'Sent mail to '+person
